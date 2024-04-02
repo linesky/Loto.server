@@ -17,7 +17,9 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         except subprocess.CalledProcessError as e:
             if 0==0:
                 #self.send_header(
-                self.wfile.write(b(f"Error executing command:\n{e.output}"))
+                bs=("Error executing command:\n"+e.output)
+                bs=(bs).encode("utf-8")
+                self.wfile.write(bs)
 def run(server_class=HTTPServer, handler_class=SimpleHTTPRequestHandler, port=8000):
     server_address = ('', port)
     httpd = server_class(server_address, handler_class)
