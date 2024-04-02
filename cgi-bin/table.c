@@ -1,8 +1,10 @@
+//#!/usr/bin/tcc -run
 #include <stdio.h>
 #include <stdlib.h>
 
 
 void title(char *t){
+        printf ("Content-type 'text/html'\r\n\r\n\r\n\r\n" ,t);
 	printf ("<html><head><title>",t);
 	printf ("</title></head><body bgcolor='blue'>");
 }
