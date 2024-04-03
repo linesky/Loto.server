@@ -13,7 +13,8 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
             scn=command.split("/cgi-bin/")
             lscn=len(scn)
             sscn=command.find(".elf")
-            
+            if sscn<0:
+                sscn=command.find(".exe")
             if sscn>-1:
                 result = subprocess.check_output("."+command, stderr=subprocess.STDOUT, shell=True, text=True)
             elif lscn>1:
@@ -27,9 +28,12 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
                     scn4=scn4.replace("_"," ")
                     scn4=scn4.replace("%20"," ")
                 print(cnd)
-                f1=open(command)
-                command=f1.read()
-                f1.close()
+                try:
+                    f1=open(command)
+                    command=f1.read()
+                    f1.close()
+                except:
+                    command="error"
                 command=command.replace("\r","\n")
                 scn1=command.split("\n")
                 cnd2=scn1[0]
@@ -54,10 +58,12 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
                     command="."+command+"index.html"
                 else:
                     command="."+command
-                f1=open(command)
-                result=f1.read()
-                f1.close()    
-                
+                try:
+                    f1=open(command)
+                    result=f1.read()
+                    f1.close()    
+                except:
+                    result="error"
             self.send_response(200)
             self.send_header("Content-type",'text/html' )
             self.end_headers()
