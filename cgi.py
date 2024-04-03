@@ -7,13 +7,25 @@ command="/usr/bin/tcc -run ./cgi-bin/table.c"
 class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         command=str(self.path)
-     
+        result=""
         try:
+            
             scn=command.split("/cgi-bin/")
             lscn=len(scn)
-            if lscn>1:
-                command="./cgi-bin/"+scn[1]
-                cnd="./cgi-bin/"+scn[1]
+            sscn=command.find(".elf")
+            
+            if sscn>-1:
+                result = subprocess.check_output("."+command, stderr=subprocess.STDOUT, shell=True, text=True)
+            elif lscn>1:
+                cnd3=scn[1].split("?")
+                lcnd3=len(cnd3)
+                command="./cgi-bin/"+cnd3[0]
+                cnd="./cgi-bin/"+cnd3[0]
+                scn4=""
+                if lcnd3>1:
+                    scn4=cnd3[1]
+                    scn4=scn4.replace("_"," ")
+                    scn4=scn4.replace("%20"," ")
                 print(cnd)
                 f1=open(command)
                 command=f1.read()
@@ -29,16 +41,28 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
                     lcnd2=cnd2.find("/")
                     if lcnd2>-1:
                         cnd2=cnd2[lcnd2:]
-                    command=cnd2+" "+cnd
+                    command=cnd2+" "+cnd+" "+scn4
+
+
+                        
                     print(command)
                     result = subprocess.check_output(command, stderr=subprocess.STDOUT, shell=True, text=True)
                 else:
                     result="error\n"
-                self.send_response(200)
-                self.send_header("Content-type",'text/html' )
-                self.end_headers()
-                bs=(result).encode("utf-8")
-                self.wfile.write(bs)
+            else:
+                if command=="/":
+                    command="."+command+"index.html"
+                else:
+                    command="."+command
+                f1=open(command)
+                result=f1.read()
+                f1.close()    
+                
+            self.send_response(200)
+            self.send_header("Content-type",'text/html' )
+            self.end_headers()
+            bs=(result).encode("utf-8")
+            self.wfile.write(bs)
             
         except subprocess.CalledProcessError as e:
             if 0==0:
