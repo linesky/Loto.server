@@ -1,2 +1,2 @@
-# Loto.server
-Loto server tcc compiler
+# command.line.sh
+shell command line
