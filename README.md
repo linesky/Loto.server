@@ -1,2 +1,3 @@
-# command.line.sh
-shell command line
+# postit.mingw
+
+min gw templete
